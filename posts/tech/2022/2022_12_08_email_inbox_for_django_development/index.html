@@ -1,0 +1,128 @@
+<!doctype html><html><head><title>Email inbox for Django development</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="ie=edge"><link rel=stylesheet href=/css/bootstrap.min.css><link rel=stylesheet href=/css/layouts/main.css><link rel=stylesheet href=/css/navigators/navbar.css><link rel=stylesheet href=/css/plyr.css><link rel=stylesheet href=/css/flag-icon.min.css><link rel=stylesheet href=/google-fonts/Mulish/mulish.css><link rel=stylesheet href=/fontawesome/css/all.min.css><link rel=icon type=image/png href=/images/mjn-logo_huc94cd2164fb0a8cc0029e94778229d7b_288620_42x0_resize_box_3.png><meta property="og:title" content="Email inbox for Django development"><meta property="og:description" content="Email inbox for Django development"><meta property="og:type" content="article"><meta property="og:url" content="https://michjnich.github.io/posts/tech/2022/2022_12_08_email_inbox_for_django_development/"><meta property="og:image" content="https://michjnich.github.io/posts/tech/2022/2022_12_08_email_inbox_for_django_development/images/mailbox.jpg"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-12-08T10:00:00+01:00"><meta property="article:modified_time" content="2022-12-08T10:00:00+01:00"><meta name=description content="Email inbox for Django development"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/atom-one-dark.min.css><link rel=stylesheet href=/css/layouts/single.css><link rel=stylesheet href=/css/navigators/sidebar.css><link rel=stylesheet href=/css/style.css><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://michjnich.github.io/posts/tech/2022/2022_12_08_email_inbox_for_django_development/images/mailbox.jpg"><meta name=twitter:title content="Email inbox for Django development"><meta name=twitter:description content="Email inbox for Django development"></head><body data-spy=scroll data-target=#TableOfContents data-offset=80><div class="container-fluid bg-dimmed wrapper"><nav class="navbar navbar-expand-xl top-navbar final-navbar shadow"><div class=container><button class="navbar-toggler navbar-light" id=sidebar-toggler type=button onclick=toggleSidebar()>
+<span class=navbar-toggler-icon></span></button>
+<a class=navbar-brand href=/><img src=/images/mjn-logo.svg alt=Logo>
+Michael J. Nicholson</a>
+<button class="navbar-toggler navbar-light" id=toc-toggler type=button onclick=toggleTOC()>
+<span class=navbar-toggler-icon></span></button><div class="collapse navbar-collapse lang-selector" id=top-nav-items><ul class="navbar-nav ml-auto"></ul></div></div><img src=/images/mjn-logo.svg class=d-none id=main-logo alt=Logo>
+<img src=/images/mjn-logo_huc94cd2164fb0a8cc0029e94778229d7b_288620_42x0_resize_box_3.png class=d-none id=inverted-logo alt="Inverted Logo"></nav><section class=sidebar-section id=sidebar-section><div class=sidebar-holder><div class=sidebar id=sidebar><form class=mx-auto method=get action=/search><input type=text name=keyword placeholder=Search data-search id=search-box></form><div class=sidebar-tree><ul class=tree id=tree><li id=list-heading><a href=/posts data-filter=all>Posts</a></li><div class=subtree><li><i class="fas fa-minus-circle"></i><a class=active href=/posts/tech/>Tech</a><ul class=active><li><i class="fas fa-minus-circle"></i><a class=active href=/posts/tech/2022/>2022</a><ul class=active><li><a href=/posts/tech/2022/2022_09_17_debug_django_in_docker/ title="Debug Django in Docker">Debug Django in Docker</a></li><li><a href=/posts/tech/2022/2022_04_06_duckduckgo_bangs/ title="DuckDuckGo !bangs">DuckDuckGo !bangs</a></li><li><a class=active href=/posts/tech/2022/2022_12_08_email_inbox_for_django_development/ title="Email inbox for Django">Email inbox for Django</a></li><li><a href=/posts/tech/2022/2022_09_21_colourblind_settings_for_git/ title="Git for the colourblind">Git for the colourblind</a></li><li><a href=/posts/tech/2022/2022_04_03_welcome_to_v2/ title="michjnich.com v2">michjnich.com v2</a></li></ul></li><li><i class="fas fa-plus-circle"></i><a href=/posts/tech/2021/>2021</a><ul><li><a href=/posts/tech/2021/2021_02_25_remote_working/ title="Remote working">Remote working</a></li></ul></li><li><i class="fas fa-plus-circle"></i><a href=/posts/tech/2020/>2020</a><ul><li><a href=/posts/tech/2020/2020_12_23_legacy_monolith/ title="Legacy monolith">Legacy monolith</a></li></ul></li></ul></li><li><a href=/posts/writing/ title=Writing>Writing</a></li></div></ul></div></div></div></section><section class=content-section id=content-section><div class=content><div class="container p-0 read-area"><div class="hero-area col-sm-12" id=hero-area style=background-image:url(/posts/tech/2022/2022_12_08_email_inbox_for_django_development/images/mailbox.jpg)></div><div class=page-content><div class="author-profile ml-auto align-self-lg-center"><img class=rounded-circle src=/images/michjnich_hu196abb93d882ab659dc50e489200e798_20228_120x120_fit_q75_box.jpg alt="Author Image"><h5 class=author-name>Michael J. Nicholson</h5><p>Thursday, December 8, 2022</p></div><div class=title><h1>Email inbox for Django development</h1></div><div class=post-content id=post-content><p>My current project sends emails. Not a very controversial statement that, as most web projects probably need to send the occasional email.</p><p>To make testing during the dev phase easy, I&rsquo;ve configured the project to use the <code>django.core.mail.backends.filebased.EmailBackend</code> backend, which just writes an email to a file in a directory you specify. This means I can just open up the file, read and visually verify the email, and click on any links (eg. email confirmation for registration link).</p><h2 id=setup-of-backend>Setup of backend</h2><p><strong><code>settings.py</code></strong></p><pre tabindex=0><code>if DEBUG:
+    EMAIL_BACKEND = &#34;django.core.mail.backends.filebased.EmailBackend&#34;
+    EMAIL_FILE_PATH = BASE_DIR / &#34;sent_emails&#34;
+else:
+    EMAIL_BACKEND = &#34;django.core.mail.backends.smtp.EmailBackend&#34;
+    SENDGRID_API_KEY = os.getenv(&#34;SENDGRID_API_KEY&#34;)
+    EMAIL_HOST = &#34;smtp.sendgrid.net&#34;
+    EMAIL_HOST_USER = &#34;apikey&#34;
+    EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+</code></pre><p>As you can see, when running in <code>DEBUG</code> mode, all emails gert written to a file under the <code>sent_emails</code> folder. A sample filename looks like this: <code>20210318-091634-140373308594112.log</code>, with the <code>YYYYMMDD-HHMMSS</code> timestamp at the start, making it reasonably easy to find the latest emails.</p><p>If not in <code>DEBUG</code> mode, I am using sendgrid, though you may have a different solution. Do not use the <code>filebased.EmailBackend</code> solution in a production environment, it is intended for development use only.</p><blockquote><p>⚠️ Do not use the <code>filebased.EmailBackend</code> solution in a production environment, it is intended for development use only.</p></blockquote><h2 id=accessing-the-mailbox-during-development>Accessing the mailbox during development</h2><p>Of course, you can just flip over to a file browser or your terminal and open or <code>cat</code> the <code>.log</code> files containing the email details. That works just fine. I found it a little irritating after a while though, so I build a basic inbox to display them to me within my project without having to change to another utility.</p><h3 id=display-an-inbox-link>Display an Inbox link</h3><p>My navbar is contained in its own template, and then included in the <code>base.html</code>, so within my <code>_navbar.html</code> template file, I included the following:</p><pre tabindex=0><code>{% if debug %}
+	&lt;li class=&#34;nav-item px-2&#34;&gt;
+		&lt;a class=&#34;nav-link&#34; href=&#34;{% url &#39;test_inbox&#39; %}&#34;&gt;Inbox&lt;/a&gt;
+	&lt;/li&gt;
+{% endif %}
+</code></pre><p>(My navbar items are contained in a <code>&lt;ul></code>, hence the list item element. Yours may look different or you may want it somewhere other than the navbar. It&rsquo;s the link for the <code>&lt;a></code> anchor element that is important here though).</p><p>Of course we need <code>test_inbox</code> to link to something, so:</p><p><strong><code>urls.py</code></strong></p><pre tabindex=0><code>if settings.DEBUG:
+    import debug_toolbar
+    
+    from .views import Inbox, InboxMail
+    
+    urlpatterns += [
+        path(&#34;__inbox/&lt;str:filename&gt;/&#34;, InboxMail.as_view(), name=&#34;test_inbox_mail&#34;),
+        path(&#34;__inbox/&#34;, Inbox.as_view(), name=&#34;test_inbox&#34;),
+        path(&#34;__debug__/&#34;, include(debug_toolbar.urls)),
+    ]
+</code></pre><p>I already had the <code>if settings.DEBUG</code> in here, as I use Django Debug Toolbar. If you don&rsquo;t use this extremely helpful tool, you should look into installing it in your development environment. It is extremely helpful.</p><blockquote><p>💡 Install <a href=https://pypi.org/project/django-debug-toolbar/>django-debug-toolbar</a> to make debugging of your Django project much, much simpler!</p></blockquote><p>To check the <code>DEBUG</code> boolean you will first need to do <code>from django.conf import settings</code>, which gives you access to everything in your <code>settings.py</code> file.</p><blockquote><p>ℹ️ <code>from django.conf import settings</code> allows you access to everything in your <code>settings.py</code></p></blockquote><p>You&rsquo;ll also note I have a link here for a second view that will show a specific mail. We&rsquo;ll get to that in a bit. I&rsquo;ve put the path at <code>__inbox</code> just to indicate it&rsquo;s a development only path.</p><h3 id=setup-the-inbox-view>Setup the Inbox view</h3><p>So we&rsquo;ve connected <code>test_inbox</code> to the <code>Inbox</code> view. Let&rsquo;s define this view.</p><pre tabindex=0><code>class Inbox(ListView):
+    &#34;&#34;&#34;
+    Testing util only - Displays list of mails in debug inbox
+    &#34;&#34;&#34;
+    
+    template_name = &#34;config/inbox.html&#34;
+    context_object_name = &#34;mail_list&#34;
+    paginate_by = 10
+    
+    def get_queryset(self):
+        import os
+        
+        from django.conf import settings
+        
+        path = settings.EMAIL_FILE_PATH
+        mail_list = os.listdir(path)
+        mail_list.sort(reverse=True)
+        return mail_list
+</code></pre><p>Lets run through this to be clear on what&rsquo;s happening:</p><ol><li><code>Inbox</code> inherits from <code>ListView</code>, for the simple reason that it will display a list of emails in the <code>EMAIL_FILE_PATH</code> folder.</li><li>I have a template for the view, of course. I&rsquo;ll show you that in a moment.</li><li><code>context_object_name</code> tells the template what the data list is called, so we can loop over it and display the data.</li><li>I&rsquo;m paginating my inbox. You don&rsquo;t have to, so feel free to leave this bit out.</li></ol><p>Within <code>get_queryset</code>:</p><ol><li>I import <code>os</code> and <code>settings</code> here because they&rsquo;re not required for any of the production views in the same <code>views.py</code> file, so importing them in a production run is unnecesary and will affect performance. This way, they only get imported in a dev environment when I actually access the inbox.</li><li><code>os.listdir</code> gives me a list of all files in the directory defined in <code>settings.EMAIL_FILE_PATH</code>. Assuming you have created a directory just to hold these emails (which you should), all that will be in here is emails your project has sent while <code>DEBUG is True</code>.</li><li>The <code>sort(reverse=True)</code> is to ensure mails are sorted in the order, and show the most recent at the top of the list. This just makes the inbox easier to use.</li><li>Finally, the view returns the list, which the template can access as <code>mail_list</code> (which we defined in <code>context_object_name</code>)</li></ol><p><strong><code>config/inbox.html</code></strong></p><pre tabindex=0><code>{% extends &#39;config/base.html&#39; %}
+
+{% block main_content %}
+	&lt;br/&gt;
+	&lt;h1&gt;Inbox&lt;/h1&gt;
+	&lt;br/&gt;
+	{% include &#39;config/_pagination.html&#39; %}
+	&lt;table class=&#34;table table-striped table-hover&#34;&gt;
+	    &lt;thead&gt;
+	        &lt;tr&gt;
+	            &lt;th scope=&#34;col&#34;&gt;Email file&lt;/th&gt;
+	        &lt;/tr&gt;
+	    &lt;/thead&gt;
+	    &lt;tbody&gt;
+	        {% for email in mail_list %}
+	            &lt;tr onclick=&#34;window.location=&#39;{% url &#34;test_inbox_mail&#34; filename=email %}&#39;&#34;&gt;
+	                &lt;td&gt;{{ email }}&lt;/td&gt;
+				&lt;/tr&gt;
+			{% empty %}
+			    &lt;tr&gt;
+			        &lt;td class=&#34;text-center&#34;&gt;No messages found.&lt;/td&gt;
+			    &lt;/tr&gt;
+			{% endfor %}
+		&lt;/tbody&gt;
+	&lt;/table&gt;
+	{% include &#39;config/_pagination.html&#39; %}
+{% endblock main_content %}
+</code></pre><p>That&rsquo;s it!</p><ul><li>The template extends my <code>base.py</code>, which also includes my navbar.</li><li>The include of pagination can be left out if you&rsquo;re not using this. I will cover a simple way to paginate a list in a seperate post, but if you&rsquo;re not sure how to do this, just leave it out, and take the <code>paginate_by</code> line out of the view. All this means is you will get a list of all files in the directory.</li><li>I&rsquo;m putting my data into a table just to make it pretty (and using bootstrap format on my project). Style yours however you like.</li><li>Note the <code>{% empty %}</code> option on the <code>{% for %}</code> loop. This kicks in only if the data you give to the for loop is empty. In this case, this means there are no emails to read.</li><li><code>{% for email in mail_list %}</code> loops over everything in <code>mail_list</code>, which is the name we gave the data in the view (<code>context_object_name</code>)</li><li>There is a tiny bit of javascript here just to link to the email itself. I have this so I can make the entire table row a link. If you had, eg. a list of text links you could just use an <code>&lt;a></code> element for this instead.</li><li>Finally, <code>{{ email }}</code> will give you the file name (since <code>mail_list</code> contained a list of all filenames in the email directory).</li></ul><p>I may add a few bits of functionality to this at some point, but for the moment I will leave them as an exercise for the reader:</p><ul><li>A <code>Delete All</code> button that removes everything in the inbox. Useful when you have a lot of mails and just want to start again.</li><li>Individual delete buttons for each mail (so each mail has a little trashcan icon by it).</li><li>A nicely formatted date/timestamp for each mail in the list.</li><li><code>To</code> information (we know the <code>from</code>, but we may be testing mails to different users, so seeing this in the list could be useful).</li></ul><h2 id=setup-the-email-view>Setup the Email view</h2><p>You&rsquo;ve seen from the <code>urls.py</code> that I have a view called <code>InboxMail</code> to view an individual email, and that each record in the <code>Inbox</code> template links to this view, passing the filename. So let&rsquo;s take a look at that:</p><pre tabindex=0><code>class InboxMail(TemplateView):
+    &#34;&#34;&#34;
+    Testing util only - Displays specific mail from the inbox
+    &#34;&#34;&#34;
+    
+    template_name = &#34;config/inbox_email.html&#34;
+    
+    def get_context_data(self, **kwargs):
+        import os
+        from datetime import datetime
+        
+        from django.conf import settings
+        
+        context = super().get_context_data(**kwargs)
+        filename = context[&#34;filename&#34;]
+        date_time = &#34; &#34;.join(os.path.splitext(filename)[0].split(&#34;-&#34;)[:2])
+        context[&#34;timestamp&#34;] = datetime.strptime(date_time, &#34;%Y%m%d %H%M%S&#34;)
+        filepath = settings.EMAIL_FILE_PATH / filename
+             
+        with open(filepath, &#34;r&#34;) as f:
+            context[&#34;email_content&#34;] = f.read()
+            
+		return context
+</code></pre><p>Here, I&rsquo;m inheriting from <code>TemplateView</code>, so all the template is really expecting is context information, which is why I am overriding <code>get_context_data</code> to do a few things:</p><ul><li>As with the <code>Inbox</code> view, any imports not also relevant for a production deployment are done within the view, for performance reasons.</li><li>The filename is parsed to extract the date and time, and format it as a more &ldquo;human readable&rdquo; string, which we pass to the template.</li><li>The file is then opened and the contents read into another variable, which we also send to the template.</li></ul><p>The template is then even simpler than the one for the inbox.</p><p><strong><code>config/inbox_email.html</code></strong></p><pre tabindex=0><code>{% extends &#39;config/base.html&#39; %}
+
+{% block main_content %}
+&lt;div class=&#34;container&#34;&gt;
+	&lt;div class=&#34;card&#34;&gt;
+	    &lt;div class=&#34;card-header font-weight-bold&#34;&gt;
+		    {{ filename }}&lt;span class=&#34;text-muted&#34;&gt;, {{ timestamp }}&lt;/span&gt;
+	    &lt;/div&gt;
+	    &lt;div class=&#34;card-body&#34;&gt;
+	        &lt;a href=&#34;{% url &#39;test_inbox&#39; %}&#34; class=&#34;btn btn-primary&#34;&gt;Return to Inbox&lt;/a&gt;
+	        &lt;br /&gt;&lt;br /&gt;
+	        {{ email_content|linebreaks }}
+	    &lt;/div&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+{% endblock main_content %}
+</code></pre><ul><li>The email is displayed as a card, just to make it look neat.</li><li>The card header has the human readable timestamp we passed in</li><li>The card body displays the email text. The <code>linebreaks</code> templatetag preserves linebreaks as they are in the email itself, and makes it a lot more readable (try it without if you want to see the difference!)</li><li>Just before the email text, there is a button to take you back to the inbox view.</li></ul><p>And that&rsquo;s it!</p><p>I find this quite useful, as I can now complete a whole manual use case test within the same application while I&rsquo;m developing, and don&rsquo;t need to switch around between browser, file explorer, possibly notepad or some other text editor.</p><p>All the code needed is here. You may need to change some display classes, or leave off pagination, or add some extra stuff you want, but the basic implementation will work, so just copy paste and you should have it up and running in no time!</p></div><div class="row pl-3 pr-3"><div class="col-md-6 share-buttons"></div></div><hr><div class="row next-prev-navigator"><div class="col-md-6 previous-article"><a href=/posts/tech/2022/2022_04_06_duckduckgo_bangs/ title="Power-up your DuckDuckGo searches with !bangs" class="btn btn-outline-info"><div><i class="fas fa-chevron-circle-left"></i> Prev</div><div class=next-prev-text>Power-up your DuckDuckGo searches with !bangs</div></a></div><div class="col-md-6 next-article"><a href=/posts/tech/2022/2022_09_21_colourblind_settings_for_git/ title="Colourblind settings for Git" class="btn btn-outline-info"><div>Next <i class="fas fa-chevron-circle-right"></i></div><div class=next-prev-text>Colourblind settings for Git</div></a></div></div><hr></div></div></div><a id=scroll-to-top class=btn><i class="fas fa-chevron-circle-up"></i></a></section><section class=toc-section id=toc-section><div class=toc-holder><h5 class="text-center pl-3">Table of Contents</h5><hr><div class=toc><nav id=TableOfContents><ul><li><a href=#setup-of-backend>Setup of backend</a></li><li><a href=#accessing-the-mailbox-during-development>Accessing the mailbox during development</a><ul><li><a href=#display-an-inbox-link>Display an Inbox link</a></li><li><a href=#setup-the-inbox-view>Setup the Inbox view</a></li></ul></li><li><a href=#setup-the-email-view>Setup the Email view</a></li></ul></nav></div></div></section></div><footer id=footer class="container-fluid text-center align-content-center footer pb-2"><div class="container pt-5"><div class="row text-left"><div class="col-md-4 col-sm-12"><h5>Navigation</h5><ul><li class=nav-item><a class=smooth-scroll href=https://michjnich.github.io#about>About</a></li><li class=nav-item><a class=smooth-scroll href=https://michjnich.github.io#skills>Skills</a></li><li class=nav-item><a class=smooth-scroll href=https://michjnich.github.io#experiences>Experience</a></li><li class=nav-item><a class=smooth-scroll href=https://michjnich.github.io#projects>Projects</a></li></ul></div><div class="col-md-4 col-sm-12"><h5>Contact me:</h5><ul><li><a href=mailto:michjnich.com@outlook.com target=_blank rel=noopener><span><i class="fas fa-envelope"></i></span> <span>michjnich.com@outlook.com</span></a></li></ul></div></div></div><hr><div class=container><div class="row text-left"><div class=col-md-4><a id=theme href=https://github.com/hossainemruz/toha target=_blank rel=noopener><img src=/images/theme-logo_hu8376fd15465fef26ffe66b6bcf0ca686_13669_32x0_resize_box_3.png alt="Toha Theme Logo">
+Toha</a></div><div class="col-md-4 text-center">© 2022 Copyright, Michael J. Nicholson</div><div class="col-md-4 text-right"><a id=hugo href=https://gohugo.io/ target=_blank rel=noopener>Powered by
+<img src=/images/hugo-logo.svg alt="Hugo Logo" height=18></a></div></div></div></footer><script type=text/javascript src=/js/jquery-3.4.1.min.js></script>
+<script type=text/javascript src=/js/popper.min.js></script>
+<script type=text/javascript src=/js/bootstrap.min.js></script>
+<script type=text/javascript src=/js/navbar.js></script>
+<script type=text/javascript src=/js/plyr.js></script>
+<script type=text/javascript src=/js/main.js></script>
+<script type=text/javascript>var sc_project=12797075,sc_invisible=1,sc_security="dff93a2a"</script><script type=text/javascript src=https://www.statcounter.com/counter/counter.js async></script><noscript><div class=statcounter><a title="Web Analytics
+    Made Easy - Statcounter" href=https://statcounter.com/ target=_blank><img class=statcounter src=https://c.statcounter.com/12797075/0/dff93a2a/1/ alt="Web Analytics Made Easy - Statcounter" referrerpolicy=no-referrer-when-downgrade></a></div></noscript><script src=https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js></script>
+<script src=/js/single.js></script>
+<script>hljs.initHighlightingOnLoad()</script></body></html>
